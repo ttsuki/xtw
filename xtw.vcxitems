@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{4da9600b-d855-49b5-a60c-21eb8fc10c0d}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)LICENSE.md" />
+    <None Include="$(MSBuildThisFileDirectory)README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)xtw\com.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)xtw\debug.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)xtw\debug_output_hook.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)xtw\win32_exception.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)xtw\registry.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)xtw\threading.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)xtw\unique_handle.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)xtw\window.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)xtw\windows_version.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)xtw\xtw.h" />
+  </ItemGroup>
+</Project>
