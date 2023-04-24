@@ -13,7 +13,7 @@ namespace xtw::debug
 {
     static void (WINAPI* original_OutputDebugStringA)(LPCSTR) = reinterpret_cast<void(WINAPI*)(LPCSTR)>(::GetProcAddress(::GetModuleHandleA("kernel32.dll"), "OutputDebugStringA"));
 
-    static void install_debug_output_hook(void (WINAPI* fun)(LPCSTR), LPCSTR target_module_name = nullptr)
+    static inline void install_debug_output_hook(void (WINAPI* fun)(LPCSTR), LPCSTR target_module_name = nullptr)
     {
         ULONG size = 0;
         auto base = reinterpret_cast<BYTE*>(GetModuleHandleA(target_module_name));

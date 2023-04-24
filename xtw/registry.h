@@ -16,14 +16,14 @@ namespace xtw::registry
 {
     using registry_key_unique_handle = unique_handle_t<HKEY, decltype(&::RegCloseKey)>;
 
-    static registry_key_unique_handle OpenKey(HKEY parent, const wchar_t* sub_key_name)
+    static inline registry_key_unique_handle OpenKey(HKEY parent, const wchar_t* sub_key_name)
     {
         HKEY key{};
         if (::RegOpenKeyW(parent, sub_key_name, &key) != ERROR_SUCCESS) return {HKEY{}, &::RegCloseKey};
         return {key, &::RegCloseKey};
     }
 
-    static std::optional<std::wstring> EnumKeyName(HKEY parent, size_t index)
+    static inline std::optional<std::wstring> EnumKeyName(HKEY parent, size_t index)
     {
         WCHAR sub_key_name[256] = {};
         DWORD len = static_cast<DWORD>(std::size(sub_key_name)) - 1;
@@ -31,7 +31,7 @@ namespace xtw::registry
         return std::optional<std::wstring>(std::in_place, sub_key_name);
     }
 
-    static std::optional<std::wstring> ReadStringValue(HKEY key, const wchar_t* value_name)
+    static inline std::optional<std::wstring> ReadStringValue(HKEY key, const wchar_t* value_name)
     {
         WCHAR val[4096] = {};
         DWORD len = sizeof val - sizeof val[0];
@@ -41,7 +41,7 @@ namespace xtw::registry
         return std::optional<std::wstring>(std::in_place, val);
     }
 
-    static std::optional<std::string> ReadStringValueA(HKEY key, const char* value_name)
+    static inline std::optional<std::string> ReadStringValueA(HKEY key, const char* value_name)
     {
         CHAR val[4096] = {};
         DWORD len = sizeof val - sizeof val[0];
@@ -51,7 +51,7 @@ namespace xtw::registry
         return std::optional<std::string>(std::in_place, val);
     }
 
-    static std::optional<GUID> ReadGuidValue(HKEY key, const wchar_t* value_name)
+    static inline std::optional<GUID> ReadGuidValue(HKEY key, const wchar_t* value_name)
     {
         GUID val{};
         auto str = ReadStringValue(key, value_name);
