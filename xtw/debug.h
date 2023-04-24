@@ -94,9 +94,9 @@ namespace xtw::debug
                 {
                     // 19 characters
                     char buf[20]{};
-                    auto i = system_clock::to_time_t(now);
+                    auto ti = system_clock::to_time_t(now);
                     std::tm tm{};
-                    (void)localtime_s(&tm, &i);
+                    (void)localtime_s(&tm, &ti);
                     auto q = std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", &tm); // YYYY-MM-DD HH:MM:SS
                     for (size_t i = 0; i < sizeof(buf) - 1; i++) *p++ = static_cast<T>(buf[i]);
                     assert(q == sizeof(buf) - 1);
