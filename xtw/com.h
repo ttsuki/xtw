@@ -87,15 +87,15 @@ namespace xtw
         }
 
         // up-cast copy ctor with AddRef
-        template <class DInterface, std::enable_if_t<std::is_convertible_v<DInterface*, TInterface*>>* = nullptr>
-        com_ptr(const com_ptr<DInterface>& ptr) noexcept
+        template <class SInterface, std::enable_if_t<std::is_convertible_v<SInterface*, TInterface*>>* = nullptr>
+        com_ptr(const com_ptr<SInterface>& ptr) noexcept
         {
             this->reset(ptr.get());
         }
 
         // up-cast copy assign with AddRef
-        template <class DInterface, std::enable_if_t<std::is_convertible_v<DInterface*, TInterface*>>* = nullptr>
-        com_ptr& operator=(const com_ptr<DInterface>& other) noexcept
+        template <class SInterface, std::enable_if_t<std::is_convertible_v<SInterface*, TInterface*>>* = nullptr>
+        com_ptr& operator=(const com_ptr<SInterface>& other) noexcept
         {
             this->reset(other.get());
             return *this;
@@ -194,13 +194,20 @@ namespace xtw
             return reinterpret_cast<InterfaceProxy*>(pointer_);
         }
 
+        // convert to U with static_cast
+        template <class UInterface, std::enable_if_t<std::is_convertible_v<TInterface*, UInterface*>>* = nullptr>
+        [[nodiscard]] com_ptr<UInterface> as() const
+        {
+            return com_ptr<UInterface>(*this); // delegates to up-cast copy-constructor
+        }
+
         // convert to U with QueryInterface
-        template <class UInterface>
+        template <class UInterface, std::enable_if_t<!std::is_convertible_v<TInterface*, UInterface*>>* = nullptr>
         [[nodiscard]] com_ptr<UInterface> as() const
         {
             if (!pointer_) return nullptr;
             com_ptr<UInterface> result{};
-            HRESULT hr = pointer_->QueryInterface(__uuidof(UInterface), result.put_void());
+            HRESULT hr = pointer_->QueryInterface(__uuidof(UInterface), result.put_void()); // AddRef if succeeded
             if (SUCCEEDED(hr)) return result;
             if (hr == E_NOINTERFACE) return nullptr;
             return nullptr; // or throw
