@@ -160,7 +160,7 @@ namespace xtw::debug
 #else
 #define XTW_DEBUG_BREAK() void(0)
 #define XTW_DEBUG_LOG(...) (::xtw::debug::null_ostream{})
-#define XTW_TRACE_LOG(...) (::xtw::debug::debug_output_stream{})
+#define XTW_TRACE_LOG(...) (::xtw::debug::debug_output_stream{__VA_ARGS__})
 #define XTW_EXPECT_SUCCESS
 #endif
 
