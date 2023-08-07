@@ -17,7 +17,8 @@
 
 namespace xtw::window
 {
-    template <class WNDPROC = ::WNDPROC, std::enable_if_t<std::is_invocable_r_v<LRESULT, WNDPROC, HWND, UINT, WPARAM, LPARAM>>* = nullptr>
+    template <class WNDPROC = ::WNDPROC, std::enable_if_t<std::is_invocable_r_v<LRESULT, WNDPROC, HWND, UINT, WPARAM, LPARAM>>* = nullptr,
+              class ONCREATED = std::function<void(HWND)>, std::enable_if_t<std::is_invocable_r_v<void, ONCREATED, HWND>>* = nullptr>
     static inline std::shared_ptr<std::remove_pointer_t<HWND>> CreateApplicationWindow(
         LPCWSTR lpClassName,
         LPCWSTR lpWindowName,
@@ -27,12 +28,17 @@ namespace xtw::window
         LONG ClientHeight,
         HICON hIcon,
         WNDPROC lpfnWndProc,
+        ONCREATED&& fnOnCreated = [](HWND window)
+        {
+            ::ShowWindow(window, SW_NORMAL);
+            ::UpdateWindow(window);
+        },
         DWORD dwClassStyle = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS,
         DWORD dwWindowStyle = WS_OVERLAPPEDWINDOW,
         DWORD dwWindowExStyle = 0)
     {
         const HMODULE hInstance = GetModuleHandleA(nullptr);
-        
+
         using WndProcContainer = std::tuple<WNDPROC>;
         constexpr auto fnProxyProc = [](HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)-> LRESULT
         {
@@ -112,9 +118,7 @@ namespace xtw::window
         }
 
         auto uhWindow = unique_handle_t{hWnd, &::DestroyWindow};
-
-        ::ShowWindow(hWnd, SW_NORMAL);
-        ::UpdateWindow(hWnd);
+        fnOnCreated(uhWindow.get());
 
         return {
             hWnd,
