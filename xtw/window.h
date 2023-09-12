@@ -1,6 +1,7 @@
 /// @file
 /// @brief  xtw::window
 /// @author (C) 2023 ttsuki
+/// Distributed under the Boost Software License, Version 1.0.
 
 #pragma once
 
